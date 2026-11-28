@@ -48,7 +48,7 @@ def make_prediction(pipe):
     st.session_state["pred"] = round(pred[0], 2)
 
 if __name__ == "__main__":
-    st.title("Prediction Car Price")
+    st.title("Car Price Predictor")
 
     # Load model
     pipe = load_model()
@@ -60,9 +60,11 @@ if __name__ == "__main__":
         with col1:
             st.number_input("Miles", value=86132.0, min_value=0.0, step=0.1, key="miles")
             st.selectbox("Model", index=0, key="model", options=[
-                'Prius', 'Highlander', 'Civic', 'Accord', 'Corolla', 'Ridgeline',
-                'Odyssey', 'CR-V', 'Pilot', 'Camry Solara', 'Matrix', 'RAV4',
-                'Rav4', 'HR-V', 'Fit', 'Yaris', 'Yaris iA', 'Tacoma', 'Camry',
+                # First 8 models; Honda
+                'Civic', 'Accord', 'Ridgeline', 'Odyssey', 'CR-V', 'Pilot','HR-V', 'Fit',
+                # Following models: Toyota
+                'Prius', 'Highlander', 'Corolla',  'Camry Solara', 'Matrix', 'RAV4',
+                'Rav4',  'Yaris', 'Yaris iA', 'Tacoma', 'Camry',
                 'Avalon', 'Venza', 'Sienna', 'Passport', 'Accord Crosstour',
                 'Crosstour', 'Element', 'Tundra', 'Sequoia', 'Corolla Hatchback',
                 '4Runner', 'Echo', 'Tercel', 'MR2 Spyder', 'FJ Cruiser',
@@ -70,6 +72,7 @@ if __name__ == "__main__":
                 'Insight', 'Clarity', 'CR-Z', 'Prius Prime', 'Prius Plug-In',
                 'Prius c', 'Prius C', 'Prius v'
             ])
+            st.caption("Note: The first 8 models are Honda and the following models are Toyota.")
             st.selectbox("Body Type", key="body_type", options=[
                 "suv", "sedan", "pickup", "hatchback", "minivan", "coupe", "wagon",
                 "convertible", "cargo_van", "mini_mpv", "passenger_van", "cutaway",
@@ -80,8 +83,8 @@ if __name__ == "__main__":
 
         # Column 2 inputs
         with col2:
-            st.number_input("Year", value=2001, min_value=1886, step=1, key="year")
-            st.number_input("Engine size (L)", value=1.5, key="engine_size", min_value=0.9, step=0.1)
+            st.number_input("Year", value=2001, min_value=1970, max_value=2024,step=1, key="year")
+            st.number_input("Engine size (L)", value=1.5, key="engine_size", min_value=0.5, step=0.1)
             st.selectbox("Drivetrain", ["FWD", "RWD", "4WD"], key="drivetrain")
             st.selectbox("Transmission", ["Automatic", "Manual"], key="transmission")
 
@@ -92,16 +95,16 @@ if __name__ == "__main__":
                 'NB', 'QC', 'BC', 'ON', 'AB', 'MB', 'SK', 'NS',
                 'PE', 'NL', 'YT', 'NC', 'OH', 'SC'
             ])
-            st.selectbox("Fuel Type", ["gasoline", "hyrid", "diesel"], key="fuel_type")  # keep typo 'hyrid'
+            st.selectbox("Fuel Type", ["gasoline", "hyrid", "biodiesel","other"], key="fuel_type")  # keep typo 'hyrid'
             st.selectbox("Engine Block", ["I", "V", "H"], key="engine_block")
         #Submit button
         st.form_submit_button("Calculate", type="primary", on_click=make_prediction, kwargs=dict(pipe=pipe))
 
     # Display the prediction
     if st.session_state["pred"] is not None:
-        st.subheader(f"Predicted Price of Reused Car: ${st.session_state['pred']}")
+        st.subheader(f"Predicted Price of Used Car: ${st.session_state['pred']:,.2f}")
     else:
         st.write("Calculate to get predicted price")
 
     # Debug: show all state values
-    st.write(st.session_state)
+    #st.write(st.session_state)b
